@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import Note
 from . import db
 import json
+import os
 
 views = Blueprint('views', __name__)
 
@@ -10,6 +11,11 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    cwd = os.getcwd()
+    print(cwd)
+    imageSets = os.listdir('website/static/imagesets')
+    imageSets = ['imagesets/' + file for file in imageSets]
+
     if request.method == 'POST':
         note = request.form.get('note')
 
@@ -21,7 +27,9 @@ def home():
             db.session.commit()
             flash('Note added!', category='success')
 
-    return render_template("home.html", user=current_user)
+        
+
+    return render_template("home.html", user=current_user, imagesets = imageSets)
 
 
 @views.route('/authtest', methods=['GET', 'POST'])
