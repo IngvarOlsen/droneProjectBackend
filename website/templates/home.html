@@ -3,10 +3,25 @@
 <h1 align="center">Notes</h1>
 
 
-<!-- flask jinja with for loop going to through multiple images -->
+
+<!--For each item in dictorionary imagesets-->
+{% for imageset in imageSetsList %}
+<div class="row">
+    <div class="col-md-12">
+      {% for elem in imageset %}
+        <div class="card">
+            <div class="card-body">
+                <p>test</p>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+</div>
+{% endfor %}
 
 
-{% for imageset in imagesets %}<img src="{{url_for('static', filename=imageset)}}" alt="{{imageset}}" width="auto" height="200px" padding="5px">{% endfor %}
+
+<!-- {% for imageset in imagesets %}<img src="{{url_for('static', filename=imageset)}}" alt="{{imageset}}" width="auto" height="200px" padding="5px">{% endfor %} -->
 
 
 <ul class="list-group list-group-flush" id="notes">

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note
+from .models import Note, ImageSet, Image
 from . import db
 import json
 import os
@@ -16,6 +16,50 @@ def home():
     imageSets = os.listdir('website/static/imagesets')
     imageSets = ['imagesets/' + file for file in imageSets]
 
+
+  
+
+    ## image sorting by start image name id into different lists in a dictionary
+    # imageSetsList = []
+    # for imageSet in imageSets:
+    #     imageSetId = imageSet.split('_')[0]
+    #     if imageSetId not in imageSetsList:
+    #         imageSetsList[imageSetId] = [imageSetId]
+    #     imageSetsList.append(imageSet)
+    # print(imageSetsList)
+
+    imageSetsDict = {}
+    for imageSet in imageSets:
+        imageSetId = imageSet.split('_')[0]
+        if imageSetId not in imageSetsDict:
+            imageSetsDict[imageSetId] = []
+        imageSetsDict[imageSetId].append(imageSet)
+    print(imageSetsDict)
+
+    ## Splitting up dictionary into lists
+    imageSetsList = []
+    for key, value in imageSetsDict.items():
+        imageSetsList.append(value)
+    print(imageSetsList)
+
+
+
+
+
+
+    # imageSetsDict = {}
+    # for imageSet in imageSets:
+    #     startImage = imageSet.split('_')[0]
+    #     if startImage in imageSetsDict:
+    #         imageSetsDict[startImage].append(imageSet)
+    #         print(imageSetsDict)
+    #     else:
+    #         imageSetsDict[startImage] = [imageSet]
+    #         print(imageSetsDict)
+        
+
+
+
     if request.method == 'POST':
         note = request.form.get('note')
 
@@ -29,7 +73,7 @@ def home():
 
         
 
-    return render_template("home.html", user=current_user, imagesets = imageSets)
+    return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
 
 
 @views.route('/authtest', methods=['GET', 'POST'])
@@ -38,6 +82,9 @@ def authTest():
     return render_template("authtest.html", user=current_user)
 
 
+
+
+############# API #############
 
 @views.route('/delete-note', methods=['POST'])
 def delete_note():
@@ -50,3 +97,15 @@ def delete_note():
             db.session.commit()
 
     return jsonify({})
+
+
+## Returns a json with the SELECT all imagesets from the database
+@views.route('/get-imagesets', methods=['GET'])
+def get_imagesets():
+    imageSets = ImageSet.query.all()
+    imageSets = [imageSet.serialize() for imageSet in imageSets]
+    return jsonify(imageSets)
+    
+
+
+
