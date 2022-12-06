@@ -18,8 +18,6 @@ def home():
     imageSets = ['imagesets/' + file for file in imageSets]
 
 
-  
-
     ## image sorting by start image name id into different lists in a dictionary
     # imageSetsList = []
     # for imageSet in imageSets:
@@ -43,11 +41,6 @@ def home():
         imageSetsList.append(value)
     print(imageSetsList)
 
-
-
-
-
-
     # imageSetsDict = {}
     # for imageSet in imageSets:
     #     startImage = imageSet.split('_')[0]
@@ -57,10 +50,6 @@ def home():
     #     else:
     #         imageSetsDict[startImage] = [imageSet]
     #         print(imageSetsDict)
-        
-
-
-
     # if request.method == 'POST':
     #     note = request.form.get('note')
 
@@ -72,8 +61,6 @@ def home():
     #         db.session.commit()
     #         flash('Note added!', category='success')
 
-        
-
     return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
 
 
@@ -82,7 +69,10 @@ def home():
 def authTest():
     return render_template("authtest.html", user=current_user)
 
-
+@views.route('/renderviewtest', methods=['GET', 'POST'])
+# @login_required
+def renderViewTest():
+    return render_template("renderviewtest.html", user=current_user)
 
 
 ############# API #############

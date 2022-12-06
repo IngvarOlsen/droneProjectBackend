@@ -291,15 +291,13 @@ def apigetjobexample():
             if response[i][5] not in imageNames:
                 imageNames.append(response[i][5])
         print(imageNames)
-
-
-
-
-        
         return json.dumps(response)
     except Exception as e:
         print(e)
         return "Error"
+
+
+        
 
 ## Example Python api call which POST to a remote server api with a json object which uses the exampleJson format in a try catch block
 @api.route('/apiimagesendexample', methods=['GET', 'POST'])
