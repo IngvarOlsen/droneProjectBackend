@@ -33,11 +33,6 @@ def saveImages():
     imageSetId = data['imageSetId']
     userId = data['userId']
     token = data['token']
-    print(userId)
-    print(type(userId))
-    print(imageNames)
-    print(imageSetId)
-    #print("userID" + userId + " and " + type(userId))
 
     if token == userToken:
         try:
@@ -83,7 +78,67 @@ def saveModel():
     else:
         return jsonify({'message': 'token not valid'})
 
-## Api which deletes a rendered model from the sqlite database where the rendered model Id equals the id supplied, the call needs to be verified with a token
+## saves a job to render so the client PC can ask for open jobs, and then innerjoin the rest to get a list of images to download with SFTP
+@api.route('/saveJob', methods=['POST'])
+def saveJob():
+    data = request.get_json()
+    print(data)
+    status = data['status']
+    userId = data['userId']
+    imageSetId = data['imageSetId']
+    token = data['token']
+    print(status)
+    print(userId)
+    print(imageSetId)
+    print(token)
+    if token == userToken:
+        try:
+            dbConnect()
+            curs.execute("INSERT INTO Job (status, user_id, imageset_id) VALUES (?, ?, ?)", (status, userId, imageSetId))
+            conn.commit()
+            conn.close()
+            print("Success")
+            return jsonify({'message': 'success'})
+        except Exception as e:
+            print(e)
+            return jsonify({'message': e})
+    else:
+        return jsonify({'message': 'token not valid'})
+
+## Api which gets all job which are set to render in status, and innerjoin the imageSet with the Image table on imageset_id
+@api.route('/getJob', methods=['POST'])
+def getJob():
+    data = request.get_json()
+    print(data)
+    status = data['status']
+    token = data['token']
+    imageSetId = data['imageSetId']
+    status = data['status']
+    print(status)
+    print(token)
+    if token == userToken:
+        try:
+            dbConnect()
+            #curs.execute("SELECT Image.image_name FROM Image WHERE Image.imageset_id = ? AND Job.status = ?", (imageSetId, status))
+            curs.execute("SELECT * FROM Job INNER JOIN Image ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
+            #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
+            rows = curs.fetchall()
+            
+            #print(json.dumps( [dict(ix) for ix in rows] ))
+            conn.close()
+            print("jsondump")
+            print(json.dumps(rows))
+            return json.dumps(rows)
+        except Exception as e:
+            print(e)
+            return jsonify({'message': e})
+    else:
+        return jsonify({'message': 'token not valid'})
+
+
+
+## Api which deletes a rendered model from the sqlite database 
+# where the rendered model Id equals the id supplied, the call needs to be verified with a token
 @api.route('/deleteRenderedModel', methods=['DELETE'])
 def deleteRenderedModel():
     data = request.get_json()
@@ -180,7 +235,7 @@ exampleImageJson = {
     "userId": 1,
     "token": "1234567890",
     "imageSetId": 1,
-    "imageName": [ "imageOne", "imageTwo", "imageThree"]
+    "imageName": [ "01_a.jpg", "01_b.png", "01_c.png"]
     }
 
 exampleModelJson = {
@@ -189,6 +244,62 @@ exampleModelJson = {
     "imageSetId": 1,
     "userId": 1
     }
+
+exampleJobJson = {
+    "token" : "1234567890",
+    "status" : "render",
+    "userId" : 1,
+    "imageSetId" : 1
+}
+
+exampleGetJobJson = {
+    "token" : "1234567890",
+    "status" : "render",
+    "userId" : 1,
+    "imageSetId" : 1
+}
+
+## Exampple Python api call POST to saveJob api with the exampleJobJson to send
+@api.route('/apisavejobexample', methods=['GET', 'POST'])
+def apiSaveJobExample():
+    try:
+        url = "http://127.0.0.1:5000/saveJob"
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(url, data=json.dumps(exampleJobJson), headers=headers)
+        return "Success"
+    except Exception as e:
+        print(e)
+        return "Error"
+
+## Exampple Python api gets all open jobs connected to userID and imageSetId 
+@api.route('/apigetjobexample', methods=['GET', 'POST'])
+def apigetjobexample():
+    try:
+        url = "http://127.0.0.1:5000/getJob"
+        headers = {'Content-Type': 'application/json'}
+        #response = requests.post(url, data=json.dumps(exampleJobJson), headers=headers)
+        response = requests.post(url, data=json.dumps(exampleJobJson), headers=headers).json()
+        print("The response:")
+        print(response)
+        # print(response.json())
+        # responseJson = response.json()
+        print(response[1][5]) # Prints out the imageName in the json array index position 5
+        imageNames = []
+        # For each in the response, append to a list all the values of the response[*][i] image names, and checks for duplicate names
+        for i in range(len(response)):
+            print(response[i][5])
+            if response[i][5] not in imageNames:
+                imageNames.append(response[i][5])
+        print(imageNames)
+
+
+
+
+        
+        return json.dumps(response)
+    except Exception as e:
+        print(e)
+        return "Error"
 
 ## Example Python api call which POST to a remote server api with a json object which uses the exampleJson format in a try catch block
 @api.route('/apiimagesendexample', methods=['GET', 'POST'])

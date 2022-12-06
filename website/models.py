@@ -29,8 +29,13 @@ class RenderedModel(db.Model):
     model_name = db.Column(db.String(150))
     user_id = db.Column(db.String(150))
     imageset_id = db.Column(db.String(150))
-   
 
+class Job(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(150))
+    user_id = db.Column(db.String(150))
+    imageset_id = db.Column(db.String(150))
+   
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
