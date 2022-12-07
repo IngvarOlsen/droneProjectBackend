@@ -1,3 +1,8 @@
+<!-- Img which links to a flask static/images image called photo.jpg-->
+<!-- <img src="{{ url_for('static', filename='sftp/photo.jpg') }}" alt="photo.jpg" width="500" height="600"> -->
+
+<input style="position: absolute;" type="range" name="pos" id="pos" min="0" max="360" step ="1" value="0"/>
+
 <canvas id="c" style="width: 100%; height: auto;"></canvas>
   <script src="https://r105.threejsfundamentals.org/threejs/resources/threejs/r105/three.min.js"></script>
 <script src="https://r105.threejsfundamentals.org/threejs/resources/threejs/r105/js/controls/OrbitControls.js"></script>
@@ -31,17 +36,20 @@ function main() {
   controls.update();
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('black');
+  scene.background = new THREE.Color('grey');
 
   {
     const planeSize = 40;
 
     const loader = new THREE.TextureLoader();
-    const texture = loader.load('https://r105.threejsfundamentals.org/threejs/resources/images/checker.png');
+    //const texture = loader.load('https://r105.threejsfundamentals.org/threejs/resources/images/checker.png');
+    // const texture = loader.load('/var/www/sftp/models/render1/texture_1001.png');
+    const texture = loader.load("https://r105.threejsfundamentals.org/threejs/resources/images/checker.png");
+
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     texture.magFilter = THREE.NearestFilter;
-    const repeats = planeSize / 2;
+    const repeats = planeSize / 3;
     texture.repeat.set(repeats, repeats);
 
     const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
@@ -70,13 +78,22 @@ function main() {
     scene.add(light);
     scene.add(light.target);
   }
-
+ 
   {
     const objLoader = new THREE.OBJLoader2();
-    objLoader.loadMtl('https://r105.threejsfundamentals.org/threejs/resources/models/windmill/windmill.mtl', null, (materials) => {
+    // 'https://r105.threejsfundamentals.org/threejs/resources/models/windmill/windmill.mtl'
+    // https://r105.threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj
+    objLoader.loadMtl("{{ url_for('static', filename='sftp/texturedMesh.mtl') }}", null, (materials) => {
       objLoader.setMaterials(materials);
-      objLoader.load('https://r105.threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj', (event) => {
+      objLoader.load("{{ url_for('static', filename='sftp/texturedMesh.obj') }}", (event) => {
         const root = event.detail.loaderRootNode;
+        root.scale.setScalar(4);
+        root.rotateX( 20 * Math.PI / 180 );
+        root.rotateY( 20 * Math.PI / 180 );
+        root.rotateY(60 * Math.PI / 180 );
+        root.translateX(5);
+        root.translateY(5);
+        root.translateX(3);
         scene.add(root);
       });
     });
@@ -105,6 +122,14 @@ function main() {
 
     requestAnimationFrame(render);
   }
+// document.getElementById ("pos" ).addEventListener( "input", function (e) {
+
+// 			//mesh.rotation.y = THREE.MathUtils.degToRad( e.target.value );
+//       mesh.rotation.y = e.target.value;
+//       render();
+
+// 		} );
+
 
   requestAnimationFrame(render);
 }

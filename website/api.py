@@ -183,9 +183,6 @@ def deleteImageSetAndImages():
         return jsonify({'message': 'token not valid'})
 
 
-
-
-
 ## Socket server which can send data to client through a new thread
 # global socServer
 # def socketServer():
@@ -218,16 +215,6 @@ def deleteImageSetAndImages():
 
 # socServer = threading.Thread(target=socketServer, args=(), daemon=True)
 # socServer.start()
-
-
-
-
-
-
-
-
-
-
 
 ### API Send Example ###
 ## Json example for imageSets with userId and multiple imagesNames

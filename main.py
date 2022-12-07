@@ -23,7 +23,8 @@ app = create_app()
 #async def ping_from_client(sid):
 #    await sio.emit('pong_from_server', room=sid)
 
-#app.static('/static', './static')
+# app.static('/static', './static')
+
 
 
 if __name__ == '__main__':

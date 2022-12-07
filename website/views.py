@@ -8,6 +8,9 @@ import os
 
 views = Blueprint('views', __name__)
 
+@views.route('/sftp/<filename>')
+def serve_file(filename):
+    return send_from_directory('/var/www/sftp', filename)
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
