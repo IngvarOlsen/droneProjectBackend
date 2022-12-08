@@ -60,6 +60,7 @@ def saveModel():
     userId = data['userId']
     imageSetId = data['imageSetId']
     token = data['token']
+    jobId = data['jobId']
     print(modelName)
     print(userId)
     print(imageSetId)
@@ -67,7 +68,7 @@ def saveModel():
     if token == userToken:
         try:
             dbConnect()
-            curs.execute("INSERT INTO Rendered_Model (model_name, user_id, imageset_id) VALUES (?, ?, ?)", (modelName, userId, imageSetId))
+            curs.execute("INSERT INTO Rendered_Model (model_name, user_id, imageset_id, job_id) VALUES (?, ?, ?)", (modelName, userId, imageSetId, jobId))
             conn.commit()
             conn.close()
             print("Success")
@@ -225,6 +226,14 @@ exampleImageJson = {
     "imageName": [ "01_a.jpg", "01_b.png", "01_c.png"]
     }
 
+#Meshroom images for render pipeline test
+exampleImagemmMeshroom = {
+    "userId": 1,
+    "token": "1234567890",
+    "imageSetId": 2,
+    "imageName": [ "IMG_1024.JPG", "IMG_1026.JPG", "IMG_1028.JPG", "IMG_1030.JPG", "IMG_1032.JPG", "IMG_1040.JPG"]
+    }
+
 exampleModelJson = {
     "token": "1234567890",
     "modelName": "modelOne",
@@ -236,14 +245,14 @@ exampleJobJson = {
     "token" : "1234567890",
     "status" : "render",
     "userId" : 1,
-    "imageSetId" : 1
+    "imageSetId" : 2
 }
 
 exampleGetJobJson = {
     "token" : "1234567890",
     "status" : "render",
     "userId" : 1,
-    "imageSetId" : 1
+    "imageSetId" : 2
 }
 
 ## Exampple Python api call POST to saveJob api with the exampleJobJson to send
@@ -292,7 +301,7 @@ def apiImageSendExample():
     try:
         url = "http://127.0.0.1:5000/saveImages"
         headers = {'Content-Type': 'application/json'}
-        response = requests.post(url, data=json.dumps(exampleImageJson), headers=headers)
+        response = requests.post(url, data=json.dumps(exampleImagemmMeshroom), headers=headers)
         return "Success"
     except Exception as e:
         print(e)

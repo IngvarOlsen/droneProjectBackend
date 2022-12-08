@@ -1,4 +1,5 @@
 *.json
 __pycache__/*
-static/sftp/images/*
-static/sftp/models/*
+website/static/sftp/images/*
+website/static/sftp/models/*
+

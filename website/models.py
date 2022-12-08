@@ -29,6 +29,7 @@ class RenderedModel(db.Model):
     model_name = db.Column(db.String(150))
     user_id = db.Column(db.String(150))
     imageset_id = db.Column(db.String(150))
+    job_id = db.Column(db.String(150))
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +42,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
+  
     #notes = db.relationship('Note')
     
 
