@@ -1,28 +1,144 @@
 {% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
 %}
-<form method="POST">
-  <h3 align="center">Login</h3>
-  <div class="form-group">
-    <label for="email">Email Address</label>
-    <input
-      type="email"
-      class="form-control"
-      id="email"
-      name="email"
-      placeholder="Enter email"
-    />
-  </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password"
-      name="password"
-      placeholder="Enter password"
-    />
-  </div>
-  <br />
-  <button type="submit" class="btn btn-primary">Login</button>
-</form>
+
+
+
+
+
+<div class="loginWrapper">
+	<div class="container">
+		<h1 style="padding-top:80px">weDrone</h1>
+
+
+      <form method="POST" class="form loginForm">
+        <h3 class="formTitle" align="center">Login</h3>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input class="input" type="email" class="form-control" id="email" name="email" placeholder="Enter email"/>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input class="input" type="password" class="form-control" id="password" name="password" placeholder="Enter password"/>
+        </div>
+        
+        <button type="submit" class="loginBtn" class="btn btn-primary">Login</button>
+        <button class="newUserBtn" onclick="newUserView()" type="button" >New User</button>
+        <div class="forgotPasswordBtn">
+          <p>Forgot your password?</p>
+        </div>
+      </form>
+
+
+
+		<!-- <form method="POST" action="/login_post" class="form loginForm">
+			<h2 class="formTitle">Login</h2>
+			<input type="text" name="email" placeholder="Email">
+			<input type="password" name="password" placeholder="Password">
+			<button type="submit" id="login-button" class="loginBtn">Login</button>
+			<button class="newUserBtn" onclick="newUserView()" type="button" >New User</button>
+			<div class="forgotPasswordBtn" onclick="forgotPasswordView()">
+				<p>Forgot your password?</p>
+			</div>
+
+		</form> -->
+
+		<form method="POST" action="/sign-up" class="form registerForm" style="display:none">
+			<h2 class="formTitle">Create a new user</h2>
+			<input type="text" name="email" placeholder="Email">
+			<input type="text" name="name" placeholder="Name">
+			<input type="text" name="company" placeholder="Company name">
+			<input type="text" name="contactNumber" placeholder="Contact Number">
+			<input type="password" name="password" id="password" maxlength="20" placeholder="Password">
+			<input type="password" maxlength="20" placeholder="Repeat Password">
+
+
+			<!-- The password strength is devided up in multiple boxes -->
+			<div id="PasswordForm">
+				<div id="password-str">
+					<div class="box box1">
+						<div class="bar-text"></div>
+						<div class="bar"></div>
+					</div>
+					<div class="box box2">
+						<div class="bar"></div>
+					</div>
+					<div class="box box3">
+						<div class="bar"></div>
+					</div>
+					<div class="box box4">
+						<div class="bar"></div>
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="registerBtn">Create</button>
+			<button class="cancelBtn" onclick="cancelToStart()" type="button" >Cancel</button>
+			
+		</form><!-- End of signup -->
+
+		<form class="form forgotPasswordForm" style="display:none">
+			<h2 class="formTitle">Reset Password</h2>
+			<p class style="margin-bottom:25px;">A mail will be sent to your address, with a guide and link to reset
+				your password</p>
+			<input type="text" placeholder="Email">
+			<button type="submit" class="resetConfirm">Reset</button>
+			<button class="cancelBtn" onclick="cancelToStart()" type="button" >Cancel</button>
+			<!-- <button type="submit" class="cancelBtn">Cancel</button> -->
+		</form>
+
+	</div>
+
+	<!-- ul li for squares -->
+	<ul class="bg-bubbles">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
+</div>
+
+      <!-- <form method="POST" class="form loginForm">
+        <h3 class="formTitle" align="center">Login</h3>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Enter email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="Enter password"
+          />
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary">Login</button>
+        <div class="forgotPasswordBtn">
+          <p>Forgot your password?</p>
+        </div>
+      </form> -->
+
+      <script src="{{url_for('static', filename='login.js')}}"></script>
+
 {% endblock %}

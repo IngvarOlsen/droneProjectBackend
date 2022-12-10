@@ -76,3 +76,7 @@ def client():
     signature = data['signature']
     public_key.verify(
         signature,
+        data['data'],
+        padding.PSS(),
+        hashes.SHA256()
+    )
