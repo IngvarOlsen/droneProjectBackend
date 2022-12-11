@@ -137,6 +137,29 @@ def getJob():
         return jsonify({'message': 'token not valid'})
 
 
+# @api.route('/getImages', methods=['POST'])
+def getImages(user_id="",token="1234567890",imageSetId=""):
+    
+    if token == userToken:
+        try:
+            dbConnect()
+            print("getImages, id is: " + str(user_id) )
+            #curs.execute("SELECT Image.image_name FROM Image WHERE Image.imageset_id = ? AND Job.status = ?", (imageSetId, status))
+            curs.execute("SELECT * FROM Image_set INNER JOIN Image ON Image_set.id = Image.imageset_id AND Image_set.user_id = ?", (user_id))
+            #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
+            rows = curs.fetchall()
+            
+            #print(json.dumps( [dict(ix) for ix in rows] ))
+            conn.close()
+            print("jsondump")
+            print(json.dumps(rows))
+            return json.dumps(rows)
+        except Exception as e:
+            print(e)
+            return jsonify({'message': e})
+    else:
+        return jsonify({'message': 'token not valid'})
+
 
 ## Api which deletes a rendered model from the sqlite database 
 # where the rendered model Id equals the id supplied, the call needs to be verified with a token

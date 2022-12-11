@@ -5,6 +5,11 @@ from .models import ImageSet, Image, RenderedModel
 from . import db
 import json
 import os
+#Import apy.py
+from . import api
+import collections
+
+
 
 views = Blueprint('views', __name__)
 
@@ -17,10 +22,39 @@ def serve_file(filename):
 def home():
     cwd = os.getcwd()
     print(cwd)
+
+    
+    imageSets = api.getImages(str(current_user.id))
+    print(imageSets)
+    ## Convert the SQL data to json so each got a key and value
+    objects_list = []
+    for image in imageSets:
+        d = collections.OrderedDict()
+        d['image_set_id'] = image[0][4]
+        #d['image_name'] = image[2]
+        objects_list.append(d)
+
+    imagesJson = json.dumps(objects_list)
+    print(imagesJson)
+
+
+
+    ## Gets all users imagesets and images in a SQL Query and dumps it to json
+
+
+
+
+    # imageSets = ImageSet.query.filter_by(user_id=current_user.id).all()
+    # for images in imageSets:
+    #     images = Image.query.filter_by(imageset_id=imageSet.id).all()
+    #     images.images = images
+    # print(json.dump(images))
+    
+
+
+
     # imageSets = os.listdir('website/static/imagesets')
     # imageSets = ['imagesets/' + file for file in imageSets]
-
-
     ## image sorting by start image name id into different lists in a dictionary
     # imageSetsList = []
     # for imageSet in imageSets:
@@ -65,7 +99,7 @@ def home():
     #         flash('Note added!', category='success')
 
     ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
-    return render_template("home.html", user=current_user)
+    return render_template("home.html", user=current_user, imageSets = imageSets)
 
 
 @views.route('/authtest', methods=['GET', 'POST'])

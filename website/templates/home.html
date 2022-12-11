@@ -4,6 +4,11 @@
 
 <h1 align="center">Notes</h1>
 
+
+{% for image in imageSets %}
+    <li>{{ image.text }}</li>
+{% endfor %}
+
 <!--For each item in dictorionary imagesets-->
 <!-- {% for imageset in imageSetsList %}
 <div class="row">
