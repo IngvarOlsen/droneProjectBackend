@@ -17,8 +17,8 @@ def serve_file(filename):
 def home():
     cwd = os.getcwd()
     print(cwd)
-    imageSets = os.listdir('website/static/imagesets')
-    imageSets = ['imagesets/' + file for file in imageSets]
+    # imageSets = os.listdir('website/static/imagesets')
+    # imageSets = ['imagesets/' + file for file in imageSets]
 
 
     ## image sorting by start image name id into different lists in a dictionary
@@ -30,19 +30,19 @@ def home():
     #     imageSetsList.append(imageSet)
     # print(imageSetsList)
 
-    imageSetsDict = {}
-    for imageSet in imageSets:
-        imageSetId = imageSet.split('_')[0]
-        if imageSetId not in imageSetsDict:
-            imageSetsDict[imageSetId] = []
-        imageSetsDict[imageSetId].append(imageSet)
-    print(imageSetsDict)
+    # imageSetsDict = {}
+    # for imageSet in imageSets:
+    #     imageSetId = imageSet.split('_')[0]
+    #     if imageSetId not in imageSetsDict:
+    #         imageSetsDict[imageSetId] = []
+    #     imageSetsDict[imageSetId].append(imageSet)
+    # print(imageSetsDict)
 
-    ## Splitting up dictionary into lists
-    imageSetsList = []
-    for key, value in imageSetsDict.items():
-        imageSetsList.append(value)
-    print(imageSetsList)
+    # ## Splitting up dictionary into lists
+    # imageSetsList = []
+    # for key, value in imageSetsDict.items():
+    #     imageSetsList.append(value)
+    # print(imageSetsList)
 
     # imageSetsDict = {}
     # for imageSet in imageSets:
@@ -64,7 +64,8 @@ def home():
     #         db.session.commit()
     #         flash('Note added!', category='success')
 
-    return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
+    ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
+    return render_template("home.html", user=current_user)
 
 
 @views.route('/authtest', methods=['GET', 'POST'])
@@ -94,11 +95,11 @@ def renderViewTest():
 
 
 ## Returns a json with the SELECT all imagesets from the database
-@views.route('/get-imagesets', methods=['GET'])
-def get_imagesets():
-    imageSets = ImageSet.query.all()
-    imageSets = [imageSet.serialize() for imageSet in imageSets]
-    return jsonify(imageSets)
+# @views.route('/get-imagesets', methods=['GET'])
+# def get_imagesets():
+#     imageSets = ImageSet.query.all()
+#     imageSets = [imageSet.serialize() for imageSet in imageSets]
+#     return jsonify(imageSets)
     
 
 

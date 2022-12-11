@@ -222,8 +222,8 @@ def deleteImageSetAndImages():
 exampleImageJson = {
     "userId": 1,
     "token": "1234567890",
-    "imageSetId": 1,
-    "imageName": [ "01_a.jpg", "01_b.png", "01_c.png"]
+    "imageSetId": 2,
+    "imageName": ["IMG_1024.JPG", "IMG_1026.JPG", "IMG_1028.JPG", "IMG_1030.JPG", "IMG_1032.JPG", "IMG_1040.JPG"]
     }
 
 #Meshroom images for render pipeline test

@@ -70,8 +70,8 @@ $("#login-button").click(function(event){
 $(document).ready(function() {
     console.log("Password str checker loaded");
     var result = $("#password-str");
-    $('#password').keyup(function(){
-        $(".bar-text").html(checkStr($('#password').val()))
+    $('#newPassword').keyup(function(){
+        $(".bar-text").html(checkStr($('#newPassword').val()))
     })  
  
     function checkStr(pas){

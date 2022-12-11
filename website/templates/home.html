@@ -1,11 +1,11 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
+<div class="wrapper">
+
 <h1 align="center">Notes</h1>
 
-
-
 <!--For each item in dictorionary imagesets-->
-{% for imageset in imageSetsList %}
+<!-- {% for imageset in imageSetsList %}
 <div class="row">
     <div class="col-md-12">
       {% for elem in imageset %}
@@ -17,7 +17,7 @@
       {% endfor %}
     </div>
 </div>
-{% endfor %}
+{% endfor %} -->
 
 
 
@@ -41,4 +41,8 @@
     <button type="submit" class="btn btn-primary">Add Note</button>
   </div>
 </form>
+
+
+</div>
+
 {% endblock %}

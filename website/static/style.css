@@ -25,6 +25,35 @@
   button {
     font-family: 'Source Sans Pro', sans-serif;
   }
+
+  /* Button for closing a popper.js popup with no border or padding or line*/
+
+  .close{
+    color: #000;
+    
+  
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    outline: 0;
+    background-color: white;
+    border: 0;
+    
+    margin: 3px;
+    color: #666666;
+    border-radius: 3px;
+    width: 25px;
+    cursor: pointer;
+    font-size: 18px;
+    transition-duration: 0.25s;
+  }
+
+  .close:hover {
+    background-color: #f5f7f9;
+  }
+
+
+
   body {
     font-family: 'Source Sans Pro', sans-serif;
     color: white;
