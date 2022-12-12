@@ -2,12 +2,82 @@
 %}
 <div class="wrapper">
 
-<h1 align="center">Notes</h1>
+<h1 align="center" style="color:black;">Image Collections</h1>
+
+<!-- {% for key in imageSets %}
+  {{ key }}: {{ value }}
+{% endfor %} -->
+
+<table style="color:black;">
+  {% for image_setSortedId in imageSets %}
+    
+    
+      <!-- <p style="color:black;">{{ image_setSortedId }}</p> -->
+      <tr>
+      {% for image_setDbId in imageSets[image_setSortedId] %}
+          <!-- Check if the image_setDbId is not none-->
+          {% if imageSets[image_setSortedId][image_setDbId][0] is defined %}
+          
+          <!-- <p style="color:black;">{{ image_setDbId }}</p> -->
+            
+                <!-- {{ image_setDbId }}{{imageSets[image_setSortedId][image_setDbId]}} -->
+
+                <!-- Div containing the divs displaying them in a line -->
+                <div class="row">
+                  <div class="col-md-12">
+                    <!-- Div containing the images -->
+                    <div class="card" sstyle="width: 800px;">
+                      <h5 class="card-header" style="color:black">ImageSet</h5>
+                      <div class="card-body">
+                        <img class="image" src="/static/sftp/images/{{imageSets[image_setSortedId][image_setDbId][0]}}" alt="{{imageSets[image_setSortedId][image_setDbId][0]}}" width="auto" height="200px" padding="5px">
+                        <img class="image"src="/static/sftp/images/{{imageSets[image_setSortedId][image_setDbId][1]}}" alt="{{imageSets[image_setSortedId][image_setDbId][1]}}" width="auto" height="200px" padding="5px">
+                        <img class="image" src="/static/sftp/images/{{imageSets[image_setSortedId][image_setDbId][2]}}" alt="{{imageSets[image_setSortedId][image_setDbId][2]}}" width="auto" height="200px" padding="5px">
+                        <!-- Div button to push the render job -->
+                      </div>
+                      <footer class="card-footer">
+                        <button type="button" class="btn btn-primary button">Render</button>
+                        <!-- Div button to delete the collection with warning colour -->
+                        <button type="button" class="btn btn-danger button">Delete</button>
+                        </footer> 
+                    </div>
+                  </div>
+
+                
+                
+                
+      
+        
+
+      {% endif %}
+        
+        <!-- <td style="color:black" >{{ image_setDbId }}</td> -->
+      {% endfor %}
+    </tr>
+    
+  {% endfor %}
+</table>
+
+<!-- ## Display for each image set -->
+<!-- {% for image_set in imageSets %}
+  <div class="row">
+    {% for image_name in image_set.image_names %}
+      <p style="color:black;">TEST</p>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <img src="{{url_for('static', filename=image_name)}}" alt="{{image_name}}" width="auto" height="200px" padding="5px">
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %} -->
 
 
-{% for image in imageSets %}
-    <li>{{ image.text }}</li>
-{% endfor %}
+<!-- {% for image in imageSets %}
+  
+    <li>{{ image.image_name }}</li>
+{% endfor %} -->
 
 <!--For each item in dictorionary imagesets-->
 <!-- {% for imageset in imageSetsList %}
@@ -29,23 +99,23 @@
 <!-- {% for imageset in imagesets %}<img src="{{url_for('static', filename=imageset)}}" alt="{{imageset}}" width="auto" height="200px" padding="5px">{% endfor %} -->
 
 
-<ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
-  <li class="list-group-item">
+<!-- <ul class="list-group list-group-flush" id="notes"> -->
+  <!-- {% for note in user.notes %} -->
+  <!-- <li class="list-group-item"> -->
     <!-- {{ note.data }}
     <button type="button" class="close" onClick="deleteNote({{note.id}})">
       <span aria-hidden="true">&times;</span>
     </button> -->
-  </li>
-  {% endfor %}
-</ul>
+  <!-- </li> -->
+  <!-- {% endfor %} -->
+<!-- </ul>
 <form method="POST">
   <textarea name="note" id="note" class="form-control"></textarea>
   <br />
   <div align="center">
     <button type="submit" class="btn btn-primary">Add Note</button>
   </div>
-</form>
+</form> -->
 
 
 </div>

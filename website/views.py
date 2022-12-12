@@ -27,15 +27,15 @@ def home():
     imageSets = api.getImages(str(current_user.id))
     print(imageSets)
     ## Convert the SQL data to json so each got a key and value
-    objects_list = []
-    for image in imageSets:
-        d = collections.OrderedDict()
-        d['image_set_id'] = image[0][4]
-        #d['image_name'] = image[2]
-        objects_list.append(d)
+    # objects_list = []
+    # for image in imageSets:
+    #     d = collections.OrderedDict()
+    #     d['image_set_id'] = image[0][4]
+    #     #d['image_name'] = image[2]
+    #     objects_list.append(d)
 
-    imagesJson = json.dumps(objects_list)
-    print(imagesJson)
+    # imagesJson = json.dumps(objects_list)
+    # print(imagesJson)
 
 
 
@@ -50,8 +50,6 @@ def home():
     #     images.images = images
     # print(json.dump(images))
     
-
-
 
     # imageSets = os.listdir('website/static/imagesets')
     # imageSets = ['imagesets/' + file for file in imageSets]

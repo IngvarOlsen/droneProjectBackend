@@ -1,7 +1,7 @@
 *.json
 *.key
 *.pem
-__pycache__/*
+website/__pycache__/*
 website/static/sftp/images/*
 website/static/sftp/models/*
 

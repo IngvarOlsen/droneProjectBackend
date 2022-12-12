@@ -10,7 +10,9 @@ import os
 import socket
 import threading
 import socketio
-
+import collections
+from collections import OrderedDict
+import traceback
 
 api = Blueprint('api', __name__)
 userToken = '1234567890'
@@ -138,27 +140,154 @@ def getJob():
 
 
 # @api.route('/getImages', methods=['POST'])
-def getImages(user_id="",token="1234567890",imageSetId=""):
+def getImages(user_id="1",token="1234567890",imageSetId=""):
     
     if token == userToken:
         try:
             dbConnect()
-            print("getImages, id is: " + str(user_id) )
+            print("getImages, userid is: " + str(user_id) )
             #curs.execute("SELECT Image.image_name FROM Image WHERE Image.imageset_id = ? AND Job.status = ?", (imageSetId, status))
             curs.execute("SELECT * FROM Image_set INNER JOIN Image ON Image_set.id = Image.imageset_id AND Image_set.user_id = ?", (user_id))
             #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
             rows = curs.fetchall()
-            
             #print(json.dumps( [dict(ix) for ix in rows] ))
             conn.close()
-            print("jsondump")
-            print(json.dumps(rows))
-            return json.dumps(rows)
+            # data = {}
+            print(rows)
+
+
+
+
+
+            # Create an OrderedDict to store the data
+            data = OrderedDict()
+
+            # Create a list to store the image sets
+            image_sets = []
+
+            # Loop through the rows in the SQLite result
+            for index, row in enumerate(rows):
+            # Check if the image set ID already exists in the list
+                if row[0] not in image_sets:
+                    # Add the image set to the list
+                    image_sets.append(row[0])
+                    # Create a dictionary to store the image set data
+                    image_set = OrderedDict()
+                    # Add the image set ID to the dictionary
+                    image_set["image_set_id"] = row[0]
+                    # Create a list to store the image names
+                    image_names = []
+                    # Add the image name to the list
+                    image_names.append(row[3])
+                    # Add the image names to the dictionary
+                    image_set["image_names"] = image_names
+                    # Add the image set to the data
+                    data[len(data)] = image_set
+                else:
+                    # Checks if row[0] matches the previous and, if row[3] is not in the list, and then nest appends it to the list
+                    if row[0] == rows[index - 1][0] and row[3] not in data[len(data) - 1]["image_names"]:
+                        data[len(data) - 1]["image_names"].append(row[3]) 
+
+            # Convert the data to JSON
+            sortedData = json.dumps(data)
+            json_data = json.loads(sortedData)
+
+            #json_data = jsonify(data)
+
+            # Print the JSON data
+            print("Json DATA")
+            print(json_data)
+
+
+            # # Create an OrderedDict to store the data
+            # data = OrderedDict()
+
+            # # Create a list to store the image sets
+            # image_sets = []
+
+            # # Loop through the rows in the SQLite result
+            # for index, row in enumerate(rows):
+            # # Check if the image set ID already exists in the list
+            #     if row[0] not in image_sets:
+            #         # Add the image set to the list
+            #         image_sets.append(row[0])
+
+            #         # Create a dictionary to store the image set data
+            #         # image_set = OrderedDict()
+            #         image_set = {}
+
+            #         # Add the image set ID to the dictionary
+            #         image_set["image_set_id"] = row[0]
+
+            #         # Create a list to store the image names
+            #         image_names = []
+
+            #         # Add the image name to the list
+            #         image_names.append(row[3])
+
+            #         # Add the image names to the dictionary
+            #         image_set["image_names"] = image_names
+
+            #         # Add the image set to the data
+            #         data.append(image_set)
+
+            # # Convert the data to JSON
+            # json_data = json.dumps(data)
+
+            # # Print the JSON data
+            # print(json_data)
+
+
+            # for row in rows:
+            #     key = row[0]  # the first column is the key
+            #     value = row[1]  # the second column is the value
+            #     data[key] = value  # add the key and value to the dictionary
+            # json_data = json.dumps(data)
+
+            # imageSets = api.getImages(str(current_user.id))
+            # print(imageSets)
+            ## Convert the SQL data to json so each got a key and value
+            # objects_list = []
+            # for image in rows:
+            #     # if image[0] not in objects_list and image[3] not in objects_list:
+            #     if not isinstance(image, objects_list):
+            #         d = collections.OrderedDict()
+            #         d['image_set_id'] = image[0]
+            #         d['image_name'] = image[3]
+            #         objects_list.append(d)
+            
+          
+            
+               
+                # d = collections.OrderedDict()
+                # d['image_set_id'] = image[0]
+                # d['image_name'] = image[3]
+                # objects_list.append(d)
+
+           
+
+
+
+            #imagesJson = json.dumps(objects_list)
+            # print(imagesJson)
+
+            # # print the JSON data
+            # print("JSON Data")
+            
+
+            # print("jsondump")
+            # print(json.dumps(rows))
+            # return json.dumps(rows)
+            return json_data
         except Exception as e:
+            print("####Error: ")
+            print(traceback.format_exc())
             print(e)
             return jsonify({'message': e})
     else:
         return jsonify({'message': 'token not valid'})
+
+#getImages()
 
 
 ## Api which deletes a rendered model from the sqlite database 
