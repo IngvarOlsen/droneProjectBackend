@@ -2,11 +2,22 @@ from website import create_app, create_database
 from sanic import Sanic
 from sanic.response import html
 from flask import send_from_directory
-
+import base64
+import hashlib
+import random
 import socketio
+import os
+
+
+randomHash=hashlib.md5(os.urandom(4)).digest(); randomHash=base64.b64encode(randomHash); 
+print(randomHash)
+
 
 app = create_app()
 app.config['UPLOAD_FOLDER'] = 'sftp/images'
+
+
+app.config['SECRET_KEY'] = "UbhodfUMwmeZTyjZ7r0B0g=="
 # app.static_url_path = '/sftp/images'
 #create_database(app)
 

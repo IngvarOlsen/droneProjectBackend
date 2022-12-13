@@ -2,7 +2,7 @@
 %}
 <div class="wrapper">
 
-<h1 align="center" style="color:black;">Image Collections</h1>
+<h1 align="center" style="color:black; margin: 20px;">Image Collections</h1>
 
 <!-- {% for key in imageSets %}
   {{ key }}: {{ value }}
@@ -18,9 +18,22 @@
           <!-- Check if the image_setDbId is not none-->
           {% if imageSets[image_setSortedId][image_setDbId][0] is defined %}
           
-          <!-- <p style="color:black;">{{ image_setDbId }}</p> -->
+        
             
                 <!-- {{ image_setDbId }}{{imageSets[image_setSortedId][image_setDbId]}} -->
+                <!-- TESTS -->
+
+                <!-- <p style="color:black;">"1: " + {{ image_setDbId }}</p>
+                <p style="color:black;">"2: " + {{imageSets[image_setSortedId][image_setDbId]}}</p>
+                <p style="color:black;">"3: " + {{imageSets[image_setSortedId][image_setDbId][0]}}</p>
+                <p style="color:black;">"4: " + {{ image_setSortedId[0][5] }}</p>
+                To display image_set_id -->
+                <!-- <p style="color:black;">"5: " + {{ imageSets['0'].image_set_id  }}</p>
+                <p style="color:black;">"6: " + {{ imageSets[image_setSortedId].image_set_id  }}</p> -->
+                
+
+
+
 
                 <!-- Div containing the divs displaying them in a line -->
                 <div class="row">
@@ -35,7 +48,7 @@
                         <!-- Div button to push the render job -->
                       </div>
                       <footer class="card-footer">
-                        <button type="button" class="btn btn-primary button">Render</button>
+                        <button type="button" class="btn btn-primary button" onClick="saveJob({{user.id}}, {{imageSets[image_setSortedId].image_set_id }})">Render</button>
                         <!-- Div button to delete the collection with warning colour -->
                         <button type="button" class="btn btn-danger button">Delete</button>
                         </footer> 
@@ -117,7 +130,14 @@
   </div>
 </form> -->
 
+<!-- Imports the baseScript.html template to load scripts -->
+
+
+
+
+
 
 </div>
 
 {% endblock %}
+{% include 'baseScript.html' %}

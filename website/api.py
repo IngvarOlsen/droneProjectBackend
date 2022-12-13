@@ -2,7 +2,7 @@ import requests
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
 #from .models import Note, ImageSet, Image
-from .models import ImageSet, Image, RenderedModel
+from .models import ImageSet, Image, RenderedModel, Job, User
 import sqlite3
 from . import db
 import json
@@ -82,9 +82,16 @@ def saveModel():
         return jsonify({'message': 'token not valid'})
 
 ## saves a job to render so the client PC can ask for open jobs, and then innerjoin the rest to get a list of images to download with SFTP
-@api.route('/saveJob', methods=['POST'])
+@api.route('/savejob', methods=['POST'])
 def saveJob():
-    data = request.get_json()
+    #data = request.get_json()
+    data = json.loads(request.data)
+        #     noteId = note['noteId']
+        #     note = Note.query.get(noteId)
+        #     if note:
+        #         if note.user_id == current_user.id:
+        #             db.session.delete(note)
+        #             db.session.commit()
     print(data)
     status = data['status']
     userId = data['userId']
@@ -94,9 +101,14 @@ def saveJob():
     print(userId)
     print(imageSetId)
     print(token)
-    if token == userToken:
+    duplicateCheck = bool(Job.query.filter_by(user_id=userId, imageset_id=imageSetId).first())
+    
+    print(duplicateCheck)
+    
+    if token == userToken and duplicateCheck == False:
         try:
             dbConnect()
+            
             curs.execute("INSERT INTO Job (status, user_id, imageset_id) VALUES (?, ?, ?)", (status, userId, imageSetId))
             conn.commit()
             conn.close()
@@ -106,10 +118,11 @@ def saveJob():
             print(e)
             return jsonify({'message': e})
     else:
-        return jsonify({'message': 'token not valid'})
+        print("token not valid or duplicate job")
+        return jsonify({'message': 'token not valid or duplicate job'})
 
 ## Api which gets all job which are set to render in status, and innerjoin the imageSet with the Image table on imageset_id
-@api.route('/getJob', methods=['POST'])
+@api.route('/getjob', methods=['POST'])
 def getJob():
     data = request.get_json()
     print(data)
@@ -138,6 +151,74 @@ def getJob():
     else:
         return jsonify({'message': 'token not valid'})
 
+## Get all current jobs for the user to display in Renders view
+# @api.route('/getjobs', methods=['GET'])
+# @login_required
+def getJobs(userId = "1", token = "1234567890"):
+    #print(current_user.id)
+    # data = request.get_json()
+    # print(data)
+    
+    # token = data['token']
+    # imageSetId = data['imageSetId']
+    # status = data['status']
+    # print(status)
+    # print(token)
+    print("getjobs")
+    if token == userToken:
+        try:
+            print("Trying to get jobs")
+            dbConnect()
+            #curs.execute("SELECT Image.image_name FROM Image WHERE Image.imageset_id = ? AND Job.status = ?", (imageSetId, status))
+            curs.execute("SELECT * FROM Job WHERE user_id = ?", (userId))
+            #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
+            rows = curs.fetchall()
+            
+            #print(json.dumps( [dict(ix) for ix in rows] ))
+            conn.close()
+            print("jsondump")
+            print(json.dumps(rows))
+            return json.loads(json.dumps(rows))
+        except Exception as e:
+            print(e)
+            return jsonify({'message': e})
+    else:
+        return jsonify({'message': 'token not valid'})
+#getJobs()
+
+
+## Get all renders for the user to display in Renders view
+# @api.route('/getjobs', methods=['GET'])
+# @login_required
+def getRenders(userId = "1", token = "1234567890"):
+    #print(current_user.id)
+    # data = request.get_json()
+    # print(data)
+    
+    # token = data['token']
+    # imageSetId = data['imageSetId']
+    # status = data['status']
+    # print(status)
+    # print(token)
+    if token == userToken:
+        try:
+            dbConnect()
+            #curs.execute("SELECT Image.image_name FROM Image WHERE Image.imageset_id = ? AND Job.status = ?", (imageSetId, status))
+            curs.execute("SELECT * FROM RenderedModel WHERE user_id = ?", (userId))
+            #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
+            rows = curs.fetchall()
+            #print(json.dumps( [dict(ix) for ix in rows] ))
+            conn.close()
+            print("jsondump")
+            print(json.dumps(rows))
+            return json.loads(json.dumps(rows))
+        except Exception as e:
+            print(e)
+            return jsonify({'message': e})
+    else:
+        return jsonify({'message': 'token not valid'})
+#getJobs()
+
 
 # @api.route('/getImages', methods=['POST'])
 def getImages(user_id="1",token="1234567890",imageSetId=""):
@@ -154,17 +235,10 @@ def getImages(user_id="1",token="1234567890",imageSetId=""):
             conn.close()
             # data = {}
             print(rows)
-
-
-
-
-
             # Create an OrderedDict to store the data
             data = OrderedDict()
-
             # Create a list to store the image sets
             image_sets = []
-
             # Loop through the rows in the SQLite result
             for index, row in enumerate(rows):
             # Check if the image set ID already exists in the list

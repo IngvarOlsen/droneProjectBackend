@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
+from sqlalchemy import Table, select, join, MetaData
 #from .models import Note, ImageSet, Image
-from .models import ImageSet, Image, RenderedModel
-from . import db
+from .models import ImageSet, Image, RenderedModel, Job
+from . import db #, session
 import json
 import os
 #Import apy.py
@@ -40,10 +41,6 @@ def home():
 
 
     ## Gets all users imagesets and images in a SQL Query and dumps it to json
-
-
-
-
     # imageSets = ImageSet.query.filter_by(user_id=current_user.id).all()
     # for images in imageSets:
     #     images = Image.query.filter_by(imageset_id=imageSet.id).all()
@@ -98,6 +95,67 @@ def home():
 
     ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
     return render_template("home.html", user=current_user, imageSets = imageSets)
+
+
+
+
+
+@views.route('/renders', methods=['GET', 'POST'])
+@login_required
+def renders():
+    cwd = os.getcwd()
+    print(cwd)
+
+    ## Gets all Jobs from the Job table 
+    print(current_user.id)
+    rendersData = api.getRenders(str(current_user.id))
+    print(rendersData)
+
+    ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
+    return render_template("renders.html", user=current_user, jobs = rendersData)
+
+
+
+
+
+@views.route('/jobs', methods=['GET', 'POST'])
+@login_required
+def jobs():
+    cwd = os.getcwd()
+    print(cwd)
+    print(current_user.id)
+    ## Gets all Jobs from the Job table 
+    jobsData = api.getJobs(str(current_user.id))
+
+
+
+    
+    # imageSets = api.getImages(str(current_user.id))
+    # print(imageSets)
+    ## Gets all Jobs from the Job table in sqlalchemy
+    # jobsData = Job.query.filter_by(user_id=current_user.id).all()
+    # print(jobsData[0].status)
+    # #metadata = MetaData(bind=db)
+    # # Define the Table objects for each table in the database
+    # job = Table('Job', session, autoload=True)
+    # renderedModel = Table('RenderedModel', session, autoload=True)
+    # # Build a query to select all columns from job and renderedModel
+    # # where the values in the `id` column of job and the `job_id`
+    # # column of renderedModel are equal
+    # query = select([job, renderedModel]).where(job.columns.user_id == renderedModel.columns.user_id)
+    # # Use the `select_from()` method to specify the join as the source
+    # # for the data you want to select
+    # query = query.select_from(join(job, renderedModel))
+    # # Execute the query and fetch the results
+    # results = db.execute(query).fetchall()
+    # # Iterate over the results and print the values in each row
+    # for row in results:
+    #     print(row[job.columns.col1], row[renderedModel.columns.col2])
+
+
+
+    ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
+    return render_template("jobs.html", user=current_user, jobs = jobsData)
 
 
 @views.route('/authtest', methods=['GET', 'POST'])

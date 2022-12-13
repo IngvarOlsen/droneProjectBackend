@@ -1,0 +1,80 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+    <div class="wrapper">
+    
+    <h1 align="center" style="color:black; margin: 20px;">Jobs</h1>
+    
+   
+    
+    <!-- ## Display for each image set -->
+    <!-- {% for image_set in imageSets %}
+      <div class="row">
+        {% for image_name in image_set.image_names %}
+          <p style="color:black;">TEST</p>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <img src="{{url_for('static', filename=image_name)}}" alt="{{image_name}}" width="auto" height="200px" padding="5px">
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %} -->
+    
+    
+    <!-- {% for image in imageSets %}
+      
+        <li>{{ image.image_name }}</li>
+    {% endfor %} -->
+    
+    <!--For each item in dictorionary imagesets-->
+    <!-- {% for imageset in imageSetsList %}
+    <div class="row">
+        <div class="col-md-12">
+          {% for elem in imageset %}
+            <div class="card">
+                <div class="card-body">
+                    <p>test</p>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+    {% endfor %} -->
+    
+    
+    
+    <!-- {% for imageset in imagesets %}<img src="{{url_for('static', filename=imageset)}}" alt="{{imageset}}" width="auto" height="200px" padding="5px">{% endfor %} -->
+    
+    
+    <!-- <ul class="list-group list-group-flush" id="notes"> -->
+      <!-- {% for note in user.notes %} -->
+      <!-- <li class="list-group-item"> -->
+        <!-- {{ note.data }}
+        <button type="button" class="close" onClick="deleteNote({{note.id}})">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      <!-- </li> -->
+      <!-- {% endfor %} -->
+    <!-- </ul>
+    <form method="POST">
+      <textarea name="note" id="note" class="form-control"></textarea>
+      <br />
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Add Note</button>
+      </div>
+    </form> -->
+    
+    <!-- Imports the baseScript.html template to load scripts -->
+    
+    
+    
+    
+    
+    
+    </div>
+    
+    {% endblock %}
+    {% include 'baseScript.html' %}
+    
