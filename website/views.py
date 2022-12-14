@@ -100,19 +100,19 @@ def home():
 
 
 
-@views.route('/renders', methods=['GET', 'POST'])
-@login_required
-def renders():
-    cwd = os.getcwd()
-    print(cwd)
+# @views.route('/renders', methods=['GET', 'POST'])
+# @login_required
+# def renders():
+#     cwd = os.getcwd()
+#     print(cwd)
 
-    ## Gets all Jobs from the Job table 
-    print(current_user.id)
-    rendersData = api.getRenders(str(current_user.id))
-    print(rendersData)
+#     ## Gets all Jobs from the Job table 
+#     print(current_user.id)
+#     rendersData = api.getRenders(str(current_user.id))
+#     print(rendersData)
 
-    ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
-    return render_template("renders.html", user=current_user, jobs = rendersData)
+#     ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
+#     return render_template("renders.html", user=current_user, jobs = rendersData)
 
 
 
@@ -157,11 +157,37 @@ def jobs():
     ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
     return render_template("jobs.html", user=current_user, jobs = jobsData)
 
+@views.route('/renders', methods=['GET', 'POST'])
+@login_required
+def renders():
+    print(current_user.id)
+    ## Gets all Jobs from the Job table 
+    rendersData = api.getRenders(str(current_user.id), "1234567890")
+    print(rendersData)
+
+    ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
+    return render_template("renders.html", user=current_user, renders = rendersData)
+
+@views.route('/renderview/<id>', methods=['GET'])
+@login_required
+def renderView(id):
+    renderData = api.getRenderById(str(id))
+    # Prints out the render data json.loads object
+    print(renderData[0][1])
+    
+
+    ##return render_template("home.html", user=current_user, imageSetsList = imageSetsList)
+    return render_template("renderview.html", user=current_user, path = renderData[0][1])
+
+
+
+
 
 @views.route('/authtest', methods=['GET', 'POST'])
 # @login_required
 def authTest():
     return render_template("authtest.html", user=current_user)
+
 
 @views.route('/renderviewtest', methods=['GET', 'POST'])
 # @login_required

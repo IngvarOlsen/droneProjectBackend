@@ -83,9 +83,10 @@ function main() {
     const objLoader = new THREE.OBJLoader2();
     // 'https://r105.threejsfundamentals.org/threejs/resources/models/windmill/windmill.mtl'
     // https://r105.threejsfundamentals.org/threejs/resources/models/windmill/windmill.obj
-    objLoader.loadMtl("{{ url_for('static', filename='sftp/models/texturedMesh.mtl') }}", null, (materials) => {
+
+    objLoader.loadMtl("{{ url_for('static', filename='sftp/models')}}{{path}}{{'texturedMesh.mtl' }}", null, (materials) => {
       objLoader.setMaterials(materials);
-      objLoader.load("{{ url_for('static', filename='sftp/models/texturedMesh.obj') }}", (event) => {
+      objLoader.load("{{ url_for('static', filename='sftp/models')}}{{path}}{{'texturedMesh.obj' }}", (event) => {
         const root = event.detail.loaderRootNode;
         root.scale.setScalar(4);
         root.rotateX( 20 * Math.PI / 180 );

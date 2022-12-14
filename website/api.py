@@ -54,8 +54,9 @@ def saveImages():
         return jsonify({'message': 'token not valid'})
             
 ## Api which saves rendered model_name , user_id and imageset_id to a sqlite database, inside a try catch block which returns exeption as e if fails, the call needs to be verified with a token
-@api.route('/saveModel', methods=['POST'])
+@api.route('/savemodel', methods=['POST', 'GET'])
 def saveModel():
+    print("saveModel")
     data = request.get_json()
     print(data)
     modelName = data['modelName']
@@ -70,7 +71,7 @@ def saveModel():
     if token == userToken:
         try:
             dbConnect()
-            curs.execute("INSERT INTO Rendered_Model (model_name, user_id, imageset_id, job_id) VALUES (?, ?, ?)", (modelName, userId, imageSetId, jobId))
+            curs.execute("INSERT INTO rendered_model (model_name, user_id, imageset_id, job_id) VALUES (?, ?, ?, ?)", (modelName, userId, imageSetId, jobId))
             conn.commit()
             conn.close()
             print("Success")
@@ -113,12 +114,14 @@ def saveJob():
             conn.commit()
             conn.close()
             print("Success")
+            flash('Job Created!', category='success')
             return jsonify({'message': 'success'})
         except Exception as e:
             print(e)
             return jsonify({'message': e})
     else:
         print("token not valid or duplicate job")
+        flash('Duplicate job or wrong access token', category='error')
         return jsonify({'message': 'token not valid or duplicate job'})
 
 ## Api which gets all job which are set to render in status, and innerjoin the imageSet with the Image table on imageset_id
@@ -190,11 +193,14 @@ def getJobs(userId = "1", token = "1234567890"):
 ## Get all renders for the user to display in Renders view
 # @api.route('/getjobs', methods=['GET'])
 # @login_required
+@api.route('/getrenders', methods=['GET'])
 def getRenders(userId = "1", token = "1234567890"):
-    #print(current_user.id)
+    print("getrenders")
+    # print(current_user.id)
     # data = request.get_json()
     # print(data)
-    
+    # userId = data['userId']
+    # token = data['token']
     # token = data['token']
     # imageSetId = data['imageSetId']
     # status = data['status']
@@ -203,8 +209,36 @@ def getRenders(userId = "1", token = "1234567890"):
     if token == userToken:
         try:
             dbConnect()
+            print("Trying to get renders")
             #curs.execute("SELECT Image.image_name FROM Image WHERE Image.imageset_id = ? AND Job.status = ?", (imageSetId, status))
-            curs.execute("SELECT * FROM RenderedModel WHERE user_id = ?", (userId))
+            curs.execute("SELECT * FROM rendered_model WHERE user_id = ?", (userId))
+            #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
+            rows = curs.fetchall()
+            #print(json.dumps( [dict(ix) for ix in rows] ))
+            conn.close()
+            print("jsondump")
+            print(json.dumps(rows))
+            return json.loads(json.dumps(rows))
+        except Exception as e:
+            print(e)
+            return jsonify({'message': e})
+    else:
+        return jsonify({'message': 'token not valid'})
+#getJobs()
+
+
+# @api.route('/getjobs', methods=['GET'])
+# @login_required
+# @api.route('/getrenderbyid', methods=['GET'])
+def getRenderById(userId = "1", token = "1234567890", renderId = "1"):
+    print("getrenders")
+    
+    if token == userToken:
+        try:
+            dbConnect()
+            print("Trying to get one render")
+            #curs.execute("SELECT Image.image_name FROM Image WHERE Image.imageset_id = ? AND Job.status = ?", (imageSetId, status))
+            curs.execute("SELECT * FROM rendered_model WHERE id = ?", (renderId))
             #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
             rows = curs.fetchall()
             #print(json.dumps( [dict(ix) for ix in rows] ))
@@ -386,6 +420,35 @@ def deleteRenderedModel():
     else:
         return jsonify({'message': 'token not valid'})
 
+## Api which deletes a meshroom jobs from the sqlite database 
+# where the job Id equals the id supplied, the call needs to be verified with a token
+@api.route('/deletejob', methods=['DELETE'])
+@login_required
+def deleteJob():
+    print("deleteJob called")
+    data = request.get_json()
+    print("data:")
+    print(data)
+    id = data['jobId']
+    userId = data['userId']
+    token = data['token']
+    print(id)
+    print(token)
+    if token == userToken:
+        try:
+            dbConnect()
+            print("Trying to delete job")
+            curs.execute("DELETE FROM Job WHERE id = ? AND user_id = ?", (id, userId))
+            conn.commit()
+            conn.close()
+            print("Job deleted")
+            flash('Job deleted!', category='success')
+            return jsonify({'message': 'success'})
+        except Exception as e:
+            return jsonify({'message': e})
+    else:
+        return jsonify({'message': 'token not valid'})
+
 ## Api which deletes imageSet matching id, and delete all images with the same imageset_id from the sqlite database, the call needs to be verified with a token
 @api.route('/deleteImageSetAndImages', methods=['DELETE'])
 def deleteImageSetAndImages():
@@ -462,9 +525,10 @@ exampleImagemmMeshroom = {
 
 exampleModelJson = {
     "token": "1234567890",
-    "modelName": "modelOne",
-    "imageSetId": 1,
-    "userId": 1
+    "modelName": "/model_7/",
+    "imageSetId": 2,
+    "userId": 1,
+    "jobId": 1
     }
 
 exampleJobJson = {
@@ -533,12 +597,23 @@ def apiImageSendExample():
         print(e)
         return "Error"
 
-@api.route('/apimodelsendexample', methods=['GET', 'POST'])
-def apiModelSendExample():
+@api.route('/apisavemodelexample', methods=['GET', 'POST'])
+def apiSaveModelExample():
     try:
-        url = "http://127.0.0.1:5000/saveModel"
+        url = "http://127.0.0.1:5000/savemodel"
         headers = {'Content-Type': 'application/json'}
         response = requests.post(url, data=json.dumps(exampleModelJson), headers=headers)
+        return "Success"
+    except Exception as e:
+        print(e)
+        return "Error"
+
+@api.route('/apigetmodelsexample', methods=['GET', 'POST'])
+def apiGetModelsExample():
+    try:
+        url = "http://127.0.0.1:5000/getmodels"
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(url, data=json.dumps(current_user.id), headers=headers)
         return "Success"
     except Exception as e:
         print(e)

@@ -2,9 +2,52 @@
     %}
     <div class="wrapper">
     
-    <h1 align="center" style="color:black; margin: 20px;">Jobs</h1>
+    <h1 align="center" style="color:black; margin: 20px;">Meshroom jobs</h1>
     
-   
+    <table style="color:black;">
+      <p style="color:black;"> Jobs will be automatically downloaded to any connected pipelines</p>
+      {% for job in jobs %}
+      
+          <!-- <p style="color:black;">{{ job }}</p> -->
+
+          <!-- <p style="color:black;">"2: " + {{jobs[job]}}</p>
+          <p style="color:black;">"3: " + {{job[1]}}</p>
+          <p style="color:black;">"4: " + {{job[2] }}</p>
+          <p style="color:black;">"4: " + {{job[3] }}</p> -->
+
+          <tr>
+              <!-- Check if the image_setDbId is not none-->
+                    <!-- Div containing the divs displaying them in a line -->
+                    <div class="row">
+                      <div class="col-md-12">
+                        <!-- Div containing the images -->
+                        <div class="card">
+                          {% if job[1] == "complete" %}
+                          <h5 class="card-header" style="color:black; background-color: rgb(145, 247, 159);"  > Finsihed job for image collection id: {{job[3]}}</h5>
+                          {% else %}
+                          <h5 class="card-header" style="color:black; background-color: rgb(255, 254, 181);"  > Open job for image collection id: {{job[3]}}</h5>
+                          {% endif %}
+                          <div class="card-body" style="text-align: left;">
+                            <p class="card-text" style="color:black">Job id: {{job[0]}}</p>
+                            <p class="card-text" style="color:black">Job status: {{job[1]}}</p>
+                            <!-- Div button to push the render job -->
+                          </div>
+                          <footer class="card-footer">
+                            <!-- <button type="button" class="btn btn-primary button" onClick="saveJob({{user.id}})">Render</button> -->
+                            <!-- Div button to delete the collection with warning colour -->
+                            <button type="button" class="btn btn-danger button" onClick="deleteJob({{user.id}}, {{job[0]}})">Delete job</button>
+                            </footer> 
+                        </div>
+                      </div>
+    
+        
+            
+            
+         
+        </tr>
+        
+      {% endfor %}
+    </table>
     
     <!-- ## Display for each image set -->
     <!-- {% for image_set in imageSets %}
@@ -77,4 +120,5 @@
     
     {% endblock %}
     {% include 'baseScript.html' %}
+    
     

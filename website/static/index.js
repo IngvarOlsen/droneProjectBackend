@@ -5,7 +5,7 @@ function saveJob(userId, imageSetId) {
     body: JSON.stringify({ userId: userId, imageSetId: imageSetId, status:"render", token:"1234567890" }),
   }).then((_res) => {
     console.log(_res)
-    //window.location.href = "/";
+    window.location.href = "/";
   });
 }
 
@@ -14,6 +14,17 @@ function getImagesets() {
     method: "GET"
   }).then((_res) => {
     window.location.href = "/";
+  });
+}
+
+function deleteJob(userId, jobId) {
+  console.log("Delete job for user: " + userId + " and job id: " + jobId)
+  fetch("/deletejob", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json"},
+    body: JSON.stringify({ userId: userId, token:"1234567890", jobId: jobId })
+  }).then((_res) => {
+    window.location.href = "/jobs";
   });
 }
 
