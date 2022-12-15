@@ -89,12 +89,12 @@ function main() {
       objLoader.load("{{ url_for('static', filename='sftp/models')}}{{path}}{{'texturedMesh.obj' }}", (event) => {
         const root = event.detail.loaderRootNode;
         root.scale.setScalar(4);
-        root.rotateX( 20 * Math.PI / 180 );
+        root.rotateX( 180 * Math.PI / 180 );
         root.rotateY( 20 * Math.PI / 180 );
-        root.rotateY(60 * Math.PI / 180 );
-        root.translateX(5);
-        root.translateY(5);
-        root.translateZ(6);
+        // root.rotateY(60 * Math.PI / 180 );
+        // root.translateX(5);
+         root.translateY(-5);
+        // root.translateZ(6);
         scene.add(root);
       });
     });

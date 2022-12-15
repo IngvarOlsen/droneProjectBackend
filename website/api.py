@@ -27,9 +27,9 @@ def dbConnect():
 ### API Receive ###
 
 ## Api which saves image names and imageset id to a sqlite database, but also saves user_id to the imageset table
-@api.route('/saveImages', methods=['POST'])
+@api.route('/saveimages', methods=['POST'])
 def saveImages():
-    data = request.get_json()
+    data = json.loads(request.get_json())
     print(data)
     imageNames = data['imageName']
     imageSetId = data['imageSetId']
@@ -39,6 +39,7 @@ def saveImages():
     if token == userToken:
         try:
             dbConnect()
+            print("Trying to add images and imagset to db")
             curs.execute("INSERT INTO image_set (user_id) VALUES (?)", (str(userId)))
             conn.commit()
             for imageName in imageNames:
@@ -177,6 +178,7 @@ def getJobs(userId = "1", token = "1234567890"):
             #curs.execute("SELECT Image.image_name FROM Image INNER JOIN Job ON ? = Image.imageset_id AND Job.status = ?", (imageSetId, status))
             rows = curs.fetchall()
             
+
             #print(json.dumps( [dict(ix) for ix in rows] ))
             conn.close()
             print("jsondump")
@@ -363,19 +365,11 @@ def getImages(user_id="1",token="1234567890",imageSetId=""):
             #         d['image_set_id'] = image[0]
             #         d['image_name'] = image[3]
             #         objects_list.append(d)
-            
-          
-            
-               
+                       
                 # d = collections.OrderedDict()
                 # d['image_set_id'] = image[0]
                 # d['image_name'] = image[3]
                 # objects_list.append(d)
-
-           
-
-
-
             #imagesJson = json.dumps(objects_list)
             # print(imagesJson)
 
@@ -461,7 +455,7 @@ def deleteImageSetAndImages():
     if token == '123456789':
         try:
             dbConnect()
-            curs.execute("DELETE FROM ImageSet WHERE id = ?", (id))
+            curs.execute("DELETE FROM Image_set WHERE id = ?", (id))
             conn.commit()
             curs.execute("DELETE FROM Image WHERE imageset_id = ?", (id))
             conn.commit()
@@ -471,6 +465,47 @@ def deleteImageSetAndImages():
             return jsonify({'message': e})
     else:
         return jsonify({'message': 'token not valid'})
+
+## Api which gets the highest ID count in the sqlite db in table ImageSet
+@api.route('/gethighestimagesetid', methods=['GET'])
+def getHighestImageSetId():
+    print("getHighestImageSetId called")
+    try:
+        data = request.get_json()
+        print(data)
+        #id = data['id']
+        dbConnect()
+        curs.execute("SELECT MAX(id) FROM Image_set ORDER BY id DESC LIMIT 1")
+        rows = curs.fetchall()
+        conn.close()
+        print(rows)
+        sortedData = json.dumps(rows)
+        json_data = json.loads(sortedData)
+        return json_data
+    except Exception as e:
+        return jsonify({'message': e})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Socket server which can send data to client through a new thread
@@ -583,13 +618,14 @@ def apigetjobexample():
         return "Error"
 
 
-        
+############
+############
 
 ## Example Python api call which POST to a remote server api with a json object which uses the exampleJson format in a try catch block
 @api.route('/apiimagesendexample', methods=['GET', 'POST'])
 def apiImageSendExample():
     try:
-        url = "http://127.0.0.1:5000/saveImages"
+        url = "http://127.0.0.1:5000/saveimages"
         headers = {'Content-Type': 'application/json'}
         response = requests.post(url, data=json.dumps(exampleImagemmMeshroom), headers=headers)
         return "Success"
@@ -618,4 +654,19 @@ def apiGetModelsExample():
     except Exception as e:
         print(e)
         return "Error"
+
+@api.route('/apigetmaxidexample', methods=['GET', 'POST'])
+def apiGetMaxIdExample():
+    try:
+        url = "http://127.0.0.1:5000/gethighestimagesetid"
+        headers = {'Content-Type': 'application/json'}
+        response = requests.get(url, data=json.dumps(current_user.id), headers=headers)
+        print("Max id is: ")
+        test = response.json()
+        print(test[0])
+        return "Success"
+    except Exception as e:
+        print(e)
+        return "Error"
 #######################
+apiGetMaxIdExample()

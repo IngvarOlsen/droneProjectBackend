@@ -21,6 +21,14 @@
     margin-bottom: 0;
   }
   
+  .card{
+    margin-bottom: 25px;
+  }
+  .image{
+    max-width: 150px;
+    height: auto;
+
+  }
 
   button {
     font-family: 'Source Sans Pro', sans-serif;
