@@ -1,6 +1,7 @@
 *.json
 *.key
 *.pem
+*.db
 
 website/__pycache__/__init__.cpython-310.pyc
 website/__pycache__/api.cpython-310.pyc
