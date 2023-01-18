@@ -171,6 +171,7 @@ def renders():
 @views.route('/renderview/<id>', methods=['GET'])
 @login_required
 def renderView(id):
+    print("id is: " + id)
     renderData = api.getRenderById(str(id))
     # Prints out the render data json.loads object
     print(renderData[0][1])

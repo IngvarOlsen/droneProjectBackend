@@ -122,6 +122,7 @@ def CheckKeys():
 ## Api which saves image names and imageset id to a sqlite database, but also saves user_id to the imageset table
 @api.route('/saveimages', methods=['POST'])
 def saveImages():
+    print("saveImages called")
     data = json.loads(request.get_json())
     print(data)
     imageNames = data['imageName']
@@ -325,7 +326,7 @@ def getRenders(userId = "1", token = "1234567890"):
 # @api.route('/getjobs', methods=['GET'])
 # @login_required
 # @api.route('/getrenderbyid', methods=['GET'])
-def getRenderById(userId = "1", token = "1234567890", renderId = "1"):
+def getRenderById(renderId, token = "1234567890"):
     print("getrenders")
     
     if token == userToken:
@@ -656,10 +657,10 @@ exampleImagemmMeshroom = {
 
 exampleModelJson = {
     "token": "1234567890",
-    "modelName": "/model_7/",
-    "imageSetId": 2,
+    "modelName": "/model_10/",
+    "imageSetId": 6,
     "userId": 1,
-    "jobId": 1
+    "jobId": 6
     }
 
 exampleJobJson = {
